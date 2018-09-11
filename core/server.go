@@ -1,21 +1,22 @@
 package core
 
 import (
-	"os"
+	"fmt"
+	"io/ioutil"
 	"net"
+	"os"
 	"strconv"
+	"strings"
+	"time"
+
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/terminal"
-	"io/ioutil"
-	"time"
-	"fmt"
-	"strings"
 )
 
 type Server struct {
-	Name     string                 `json:"name"`
-	Ip       string                 `json:"ip"`
-	Port     int                    `json:"port"`
+	Name     string                 `json:"name" toml:"name"`
+	Ip       string                 `json:"ip" toml:"ip"`
+	Port     int                    `json:"port" toml:"port"`
 	User     string                 `json:"user"`
 	Password string                 `json:"password"`
 	Method   string                 `json:"method"`

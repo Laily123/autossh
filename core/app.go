@@ -1,17 +1,19 @@
 package core
 
 import (
-	"io/ioutil"
+	"bytes"
 	"encoding/json"
 	"errors"
-	"strconv"
 	"fmt"
-	"strings"
-	"bytes"
-	"os"
 	"io"
+	"io/ioutil"
+	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/BurntSushi/toml"
 )
 
 type IndexType int
@@ -22,16 +24,16 @@ const (
 )
 
 type Group struct {
-	GroupName string   `json:"group_name"`
+	GroupName string   `json:"group_name" toml:"group_name"`
 	Prefix    string   `json:"prefix"`
 	Servers   []Server `json:"servers"`
 }
 
 type Config struct {
-	ShowDetail bool                   `json:"show_detail"`
-	Servers    []Server               `json:"servers"`
-	Groups     []Group                `json:"groups"`
-	Options    map[string]interface{} `json:"options"`
+	ShowDetail bool                   `json:"show_detail" toml:"show_detail"`
+	Servers    []Server               `json:"servers" toml:"servers"`
+	Groups     []Group                `json:"groups" toml:"groups"`
+	Options    map[string]interface{} `json:"options" toml:"options"`
 }
 
 type ServerIndex struct {
@@ -273,8 +275,7 @@ func (app *App) isGlobalInput(flag string) bool {
 
 // 加载配置文件
 func (app *App) loadConfig() {
-	b, _ := ioutil.ReadFile(app.ConfigPath)
-	err := json.Unmarshal(b, &app.config)
+	_, err := toml.DecodeFile(app.ConfigPath, &app.config)
 	if err != nil {
 		Printer.Errorln("加载配置文件失败", err)
 		panic(errors.New("加载配置文件失败：" + err.Error()))
@@ -311,7 +312,7 @@ func (app *App) formatSeparator(title string, c string, maxlength float64) {
 
 	charslen := int((maxlength - ZhLen(title)) / 2)
 	chars := ""
-	for i := 0; i < charslen; i ++ {
+	for i := 0; i < charslen; i++ {
 		chars += c
 	}
 

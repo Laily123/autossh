@@ -1,8 +1,9 @@
 package core
 
 import (
-	"os"
+	"io"
 	"log"
+	"os"
 )
 
 type logger struct {
@@ -39,7 +40,7 @@ func (logger *logger) write(msg ...interface{}) {
 	}
 
 	// 创建一个日志对象
-	l := log.New(logFile, logger.level, log.LstdFlags)
+	l := log.New(io.MultiWriter(os.Stdout, logFile), logger.level, log.LstdFlags)
 
 	s := make([]interface{}, 1)
 	s[0] = "[" + logger.category + "]"

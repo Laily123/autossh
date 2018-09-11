@@ -2,9 +2,8 @@ package main
 
 import (
 	"autossh/core"
-	"os"
-	"path/filepath"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -45,11 +44,9 @@ func main() {
 	}()
 
 	if configPath == "" {
-		configPath, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-		configPath = configPath + "/config.json"
-	} else {
-		configPath, _ = core.ParsePath(configPath)
+		configPath = "~/.config/autossh.toml"
 	}
+	configPath, _ = core.ParsePath(configPath)
 
 	core.Log.Category("main").Info("config path=", configPath)
 
