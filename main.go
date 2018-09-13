@@ -14,6 +14,7 @@ var (
 
 func main() {
 	configPath := ""
+	serverName := ""
 	if len(os.Args) > 1 {
 		option := strings.Split(os.Args[1], "=")
 
@@ -34,6 +35,8 @@ func main() {
 		case "-v":
 			version()
 			return
+		default:
+			serverName = option[0]
 		}
 	}
 
@@ -66,7 +69,7 @@ func main() {
 	app := core.App{
 		ConfigPath: configPath,
 	}
-	app.Init()
+	app.Init(serverName)
 }
 
 // 版本信息

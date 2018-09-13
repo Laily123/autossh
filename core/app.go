@@ -50,7 +50,7 @@ type App struct {
 }
 
 // 执行脚本
-func (app *App) Init() {
+func (app *App) Init(serverName string) {
 	app.serverIndex = make(map[string]ServerIndex)
 
 	// 解析配置
@@ -58,7 +58,11 @@ func (app *App) Init() {
 
 	app.loadServerMap(true)
 
-	app.show()
+	if serverName == "" {
+		app.show()
+	} else {
+		app.quickConnect(serverName)
+	}
 }
 
 func (app *App) saveAndReload() {
@@ -89,6 +93,21 @@ func (app *App) show() {
 		server.Connect()
 	}
 	//}
+}
+
+// 快速连接
+func (app *App) quickConnect(serverName string) {
+	for _, v := range app.serverIndex {
+		if v.server.Name == serverName {
+			server := v.server
+			Printer.Infoln("你选择了", server.Name)
+			Log.Category("app").Info("select server", server.Name)
+			server.Connect()
+			return
+		}
+	}
+	Printer.Infoln("server name 错误")
+	app.show()
 }
 
 func (app *App) handleGlobalCmd(cmd string) bool {
